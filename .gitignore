@@ -1,0 +1,10 @@
+build/
+*.user
+*.pro.user
+*.o
+*.obj
+*.exe
+*.dll
+*.log
+*.cache/
+.qtc_clangd/
