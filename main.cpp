@@ -2,6 +2,8 @@
 #include <iostream>
 #include "procesamiento.h"
 #include "bit_operations.h"
+#include "masking_verification.h"
+
 
 using namespace std;
 
@@ -66,6 +68,57 @@ int main(int argc, char *argv[]) {
         delete[] pixelData;
         pixelData = nullptr;
     }
+
+    // ============ PRUEBA DE ENMASCARAMIENTO ============
+    cout << "\n--- VERIFICACION DE ENMASCARAMIENTO ---" << endl;
+
+    // Cargar imagen (I_D.bmp ya cargada como pixelData)
+    // Cargar máscara (M.bmp)
+    int width_mask = 0, height_mask = 0;
+    QString rutaMascara = "C:/Caso 1/M.bmp";
+    unsigned char* mascara = loadPixels(rutaMascara, width_mask, height_mask);
+    if (mascara == nullptr) {
+        cout << "Error: no se pudo cargar la máscara." << endl;
+        return -1;
+    }
+
+
+    // Cargar archivo de resultado (M1.txt)
+    int seed = 0, n_pixels = 0;
+    unsigned int* resultado = loadSeedMasking("C:/Caso 1/M1.txt", seed, n_pixels);
+    if (!resultado) {
+        cout << "Error: no se pudo cargar el archivo de resultados." << endl;
+        return -1;
+    }
+
+    int width_image = 0, height_image = 0;
+    unsigned char* pixelDataVer = loadPixels("C:/Caso 1/I_D.bmp", width_image, height_image);
+    if (pixelDataVer == nullptr) {
+        cout << "Error: no se pudo cargar la imagen I_D.bmp" << endl;
+        return -1;
+    }
+
+    // Imprimir dimensiones para verificar
+    cout << "Dimensiones imagen: " << width_image << "x" << height_image << endl;
+    cout << "Dimensiones máscara: " << width_mask << "x" << height_mask << endl;
+
+    // Verificar enmascaramiento
+    bool ok = verificarEnmascaramiento(pixelDataVer, mascara, resultado, seed,
+                                       height_mask, width_mask, width_image, height_image);
+
+
+    if (!ok) {
+        cout << "La verificacion del enmascaramiento fallo." << endl;
+    } else {
+        cout << "La verificacion del enmascaramiento fue EXITOSA." << endl;
+    }
+
+    // Liberar memoria
+    delete[] mascara;
+    delete[] resultado;
+    delete[] pixelDataVer;
+
+
 
     return 0;
 }
