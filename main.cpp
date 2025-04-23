@@ -4,10 +4,16 @@
 #include "bit_operations.h"
 #include "masking_verification.h"
 
+/*
+ * Ruta para commits:
+ * cd "C:\Users\FELIPE\OneDrive - Universidad de Antioquia\PERSONAL\UDEA\2025-1\Cursos\Informática II\Desafío 1\Solucion\Desafio1_InfoII_JuanOrozco_Davielys"
+*/
+
 
 using namespace std;
 
 void printBits(unsigned char byte);
+void imprimirRGB(const unsigned char* data, const string& mensaje);
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
@@ -100,7 +106,7 @@ int main(int argc, char *argv[]) {
 
     // Imprimir dimensiones para verificar
     cout << "Dimensiones imagen: " << width_image << "x" << height_image << endl;
-    cout << "Dimensiones máscara: " << width_mask << "x" << height_mask << endl;
+    cout << "Dimensiones mascara: " << width_mask << "x" << height_mask << endl;
 
     // Verificar enmascaramiento
     bool ok = verificarEnmascaramiento(pixelDataVer, mascara, resultado, seed,
@@ -118,7 +124,69 @@ int main(int argc, char *argv[]) {
     delete[] resultado;
     delete[] pixelDataVer;
 
+    // ================= PRUEBA DE DESPLAZAMIENTOS =================
+    cout << "\n--- PRUEBA DE DESPLAZAMIENTOS ---" << endl;
 
+    //0b11010010 = 210
+    //0b11100011 = 227
+    //0b01010101 = 85
+
+    unsigned char datosShift[] = {0b01010101}; // Valor base: 227 en decimal
+    int sizeShift = sizeof(datosShift) / sizeof(datosShift[0]);
+    int bitsShift = 3;
+
+    cout << "Valor original: ";
+    for (int i = 0; i < sizeShift; i++) {
+        cout << "Binario: ";
+        for (int b = 7; b >= 0; b--) {
+            cout << ((datosShift[i] >> b) & 1);
+        }
+        cout << " | Decimal: " << (int)datosShift[i] << endl;
+    }
+
+    // Desplazamiento a la izquierda
+    shiftLeft(datosShift, sizeShift, bitsShift);
+    cout << "Despues de desplazamiento a la izquierda " << bitsShift << " bits:\n";
+    for (int i = 0; i < sizeShift; i++) {
+        cout << "Binario: ";
+        for (int b = 7; b >= 0; b--) {
+            cout << ((datosShift[i] >> b) & 1);
+        }
+        cout << " | Decimal: " << (int)datosShift[i] << endl;
+    }
+
+    // Restaurar valor original para la siguiente prueba
+    datosShift[0] = 0b01010101;
+
+    // Desplazamiento a la derecha
+    shiftRight(datosShift, sizeShift, bitsShift);
+    cout << "Despues de desplazamiento a la derecha " << bitsShift << " bits:\n";
+    for (int i = 0; i < sizeShift; i++) {
+        cout << "Binario: ";
+        for (int b = 7; b >= 0; b--) {
+            cout << ((datosShift[i] >> b) & 1);
+        }
+        cout << " | Decimal: " << (int)datosShift[i] << endl;
+    }
+
+    // ============ PRUEBA DE DESPLAZAMIENTO EN PIXEL RGB ============
+
+    unsigned char pixel[3] = {120, 45, 200}; // R, G, B
+
+    imprimirRGB(pixel, "\nValor original del pixel (RGB):");
+
+    // Desplazamiento a la izquierda
+    shiftLeft(pixel, 3, 3);  // 3 canales, 3 bits
+    imprimirRGB(pixel, "Despues de desplazamiento a la izquierda 3 bits:");
+
+    // Restaurar valores originales
+    pixel[0] = 120;
+    pixel[1] = 45;
+    pixel[2] = 200;
+
+    // Desplazamiento a la derecha
+    shiftRight(pixel, 3, 3);
+    imprimirRGB(pixel, "Despues de desplazamiento a la derecha 3 bits:");
 
     return 0;
 }
@@ -128,4 +196,17 @@ void printBits(unsigned char byte) {
     for (int i = 7; i >= 0; i--) {
         cout << ((byte >> i) & 1);
     }
+}
+
+//Funcion para imprimir los bits de un pixel RGB
+void imprimirRGB(const unsigned char* data, const string& mensaje) {
+    cout << mensaje << endl;
+    for (int i = 0; i < 3; ++i) {
+        cout << "Canal [" << i << "] = " << (int)data[i] << " | Binario: ";
+        for (int j = 7; j >= 0; --j) {
+            cout << ((data[i] >> j) & 1);
+        }
+        cout << endl;
+    }
+    cout << "-------------------------------------" << endl;
 }

@@ -9,6 +9,7 @@ CONFIG += c++17 cmdline
 SOURCES += \
         bit_operations.cpp \
         main.cpp \
+        masking_verification.cpp \
         procesamiento.cpp
 
 # Default rules for deployment.
@@ -18,4 +19,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     bit_operations.h \
+    masking_verification.h \
     procesamiento.h
