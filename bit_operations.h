@@ -2,15 +2,22 @@
 #define BIT_OPERATIONS_H
 
 // XOR
+
 void xorPixels(unsigned char* image, unsigned char* mask, int size);
 
-//Rotaciones a izquierda y derecha
+
+//ROTACION: izquierda y derecha
 void rotateRight(unsigned char* data, int size, int bits);
 void rotateLeft(unsigned char* data, int size, int bits);
+void rotarDerecha3(unsigned char* data, int size); //Adaptada para pruebas
+void rotarIzquierda3(unsigned char* data, int size); //Adaptada para pruebas
 
-//Desplazmientos a izquierda y derecha
+//DESPLAZAMIENTO: izquierda y derecha
 void shiftRight(unsigned char* data, int size, int bits);
 void shiftLeft(unsigned char* data, int size, int bits);
+void desplazarIzquierda3(unsigned char* data, int size); //Adaptada para pruebas
+void desplazarDerecha3(unsigned char* data, int size); //Adapatada para pruebas
+
 
 //Probar diferentes transformaciones y verificarlas con los arvichivos Mx.txt
 bool probarTransformacion(unsigned char* original, int width, int height,

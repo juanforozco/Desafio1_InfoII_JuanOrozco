@@ -36,6 +36,15 @@ void rotateLeft(unsigned char* data, int size, int bits) {
     }
 }
 
+//Funciones adaptadoras para corregir pruebas de transformaciones:
+void rotarDerecha3(unsigned char* data, int size) {
+    rotateRight(data, size, 3);
+}
+
+void rotarIzquierda3(unsigned char* data, int size) {
+    rotateLeft(data, size, 3);
+}
+
 /*
  * Funciones de desplazamiento a la derecha y a la izquierda:
  * Void: No tiene retorno, ya que modifica directamente en memoria.
@@ -58,6 +67,15 @@ void shiftRight(unsigned char* data, int size, int bits) {
     for (int i = 0; i < size; ++i) {
         data[i] = data[i] >> bits;
     }
+}
+
+//Funciones adaptadoras para corregir pruebas de transformaciones:
+void desplazarIzquierda3(unsigned char* data, int size) {
+    shiftLeft(data, size, 3);
+}
+
+void desplazarDerecha3(unsigned char* data, int size) {
+    shiftRight(data, size, 3);
 }
 
 

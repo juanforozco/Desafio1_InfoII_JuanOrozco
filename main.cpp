@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
     // Cargar imagen (I_D.bmp ya cargada como pixelData)
     // Cargar máscara (M.bmp)
     int width_mask = 0, height_mask = 0;
-    QString rutaMascara = "C:/Caso 1/M.bmp";
+    QString rutaMascara = "C:/Caso1/M.bmp";
     unsigned char* mascara = loadPixels(rutaMascara, width_mask, height_mask);
     if (mascara == nullptr) {
         cout << "Error: no se pudo cargar la máscara." << endl;
@@ -92,14 +92,14 @@ int main(int argc, char *argv[]) {
 
     // Cargar archivo de resultado (M1.txt)
     int seed = 0, n_pixels = 0;
-    unsigned int* resultado = loadSeedMasking("C:/Caso 1/M1.txt", seed, n_pixels);
+    unsigned int* resultado = loadSeedMasking("C:/Caso1/M1.txt", seed, n_pixels);
     if (!resultado) {
         cout << "Error: no se pudo cargar el archivo de resultados." << endl;
         return -1;
     }
 
     int width_image = 0, height_image = 0;
-    unsigned char* pixelDataVer = loadPixels("C:/Caso 1/I_D.bmp", width_image, height_image);
+    unsigned char* pixelDataVer = loadPixels("C:/Caso1/I_D.bmp", width_image, height_image);
     if (pixelDataVer == nullptr) {
         cout << "Error: no se pudo cargar la imagen I_D.bmp" << endl;
         return -1;
@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {
 
     // Cargar imagen original I_O
     int width_o = 0, height_o = 0;
-    unsigned char* I_O = loadPixels("C:/Caso 1/I_O.bmp", width_o, height_o);
+    unsigned char* I_O = loadPixels("C:/Caso1/I_O.bmp", width_o, height_o);
     if (!I_O) {
         cout << "Error al cargar I_O.bmp\n";
         return -1;
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
 
     // Cargar imagen IM
     int width_im = 0, height_im = 0;
-    unsigned char* I_M = loadPixels("C:/Caso 1/I_M.bmp", width_im, height_im);
+    unsigned char* I_M = loadPixels("C:/Caso1/I_M.bmp", width_im, height_im);
     if (!I_M) {
         cout << "Error al cargar I_M.bmp\n";
         return -1;
@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
 
     // Cargar máscara
     int width_m = 0, height_m = 0;
-    unsigned char* mascara = loadPixels("C:/Caso 1/M.bmp", width_m, height_m);
+    unsigned char* mascara = loadPixels("C:/Caso1/M.bmp", width_m, height_m);
     if (!mascara) {
         cout << "Error al cargar la máscara\n";
         return -1;
@@ -219,7 +219,7 @@ int main(int argc, char *argv[]) {
 
     // Cargar archivo M1.txt
     int seed = 0, n_pixels = 0;
-    unsigned int* resultado = loadSeedMasking("C:/Caso 1/M1.txt", seed, n_pixels);
+    unsigned int* resultado = loadSeedMasking("C:/Caso1/M1.txt", seed, n_pixels);
     if (!resultado) {
         cout << "Error al cargar M1.txt\n";
         return -1;
@@ -234,20 +234,20 @@ int main(int argc, char *argv[]) {
     delete[] copiaXOR;
 
     // Prueba 2: rotación a la derecha
-    cout << "\nProbar rotación a la derecha..." << endl;
-    bool ok2 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, rotateRight);
+    cout << "\nProbar rotacion a la derecha..." << endl;
+    bool ok2 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, rotarDerecha3);
 
     // Prueba 3: rotación a la izquierda
-    cout << "\nProbar rotación a la izquierda..." << endl;
-    bool ok3 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, rotateLeft);
+    cout << "\nProbar rotacion a la izquierda..." << endl;
+    bool ok3 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, rotarIzquierda3);
 
     // Prueba 4: desplazamiento a la izquierda
     cout << "\nProbar desplazamiento a la izquierda..." << endl;
-    bool ok4 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, shiftLeft);
+    bool ok4 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, desplazarIzquierda3);
 
     // Prueba 5: desplazamiento a la derecha
     cout << "\nProbar desplazamiento a la derecha..." << endl;
-    bool ok5 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, shiftRight);
+    bool ok5 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, desplazarDerecha3);
 
     // Mostrar resumen
     cout << "\n=== RESULTADOS DE LAS TRANSFORMACIONES ===" << endl;
@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
     if (ok5) cout << "Correcto: DESPLAZAMIENTO DERECHA coincide con M1.txt\n";
 
     if (!ok1 && !ok2 && !ok3 && !ok4 && !ok5) {
-        cout << "Incorrecto: Ninguna transformación coincidió con M1.txt\n";
+        cout << "Incorrecto: Ninguna transformacion coincidio con M1.txt\n";
     }
 
     delete[] I_O;
