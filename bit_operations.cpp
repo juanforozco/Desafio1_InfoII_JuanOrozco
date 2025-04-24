@@ -1,4 +1,5 @@
 #include "bit_operations.h"
+#include "masking_verification.h" // Necesario para llamar a verificarEnmascaramiento
 
 /*
  * Funcion XOR entre dos arreglos de bytes.
@@ -58,3 +59,47 @@ void shiftRight(unsigned char* data, int size, int bits) {
         data[i] = data[i] >> bits;
     }
 }
+
+
+/*Funcion que permite probar una transformacion sobre una imágen (Usando una copia para no modificarla) y verificar si su
+ * enmascaramiento coincide con el archivo Mx.txt:
+ * unsigned char*: Arreglo dinámico con la imágen "original".
+ * int width, height: Dimensiones de la imagen "original".
+ * unsigned char* mascara: Arreglo dinámico con la mascara.
+ * unsigned int* resultado: Arreglo con los valores del archivo Mx.txt (Puede ser mayor a 255 entonces debe ser int).
+ * int seed: Semilla, desplazamiento usado para aplicar la mascara.
+ * int m, n: Dimensiones de la mascara.
+ *
+ * void (*operation)(unsigned char*, int): Puntero a funcion: Recibe una funcion como parámetro (XOR, rotación, desplazamiento).
+ */
+
+bool probarTransformacion(unsigned char* original, int width, int height,
+                          unsigned char* mascara, unsigned int* resultado,
+                          int seed, int m, int n,
+                          void (*operacion)(unsigned char*, int)) {
+
+    int total = width * height * 3;
+
+    // Crear una copia dinámica de la imagen original
+    unsigned char* copia = new unsigned char[total];
+
+    //Copia byte a byte
+    for (int i = 0; i < total; ++i) {
+        copia[i] = original[i];
+    }
+
+    // Aplicar la operación bit a bit
+    operacion(copia, total);
+
+    // Verificar el resultado del enmascaramiento con la copia modificada
+    bool exito = verificarEnmascaramiento(copia, mascara, resultado, seed, m, n, width, height);
+
+    // Liberar memoria usada por la copia
+    delete[] copia;
+
+    return exito;
+}
+
+
+
+

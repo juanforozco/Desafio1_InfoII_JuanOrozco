@@ -18,6 +18,7 @@ void imprimirRGB(const unsigned char* data, const string& mensaje);
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
+    /*
     // ================= PRUEBA DE ROTACION =================
     cout << "\n--- PRUEBA DE ROTACIONES ---" << endl;
 
@@ -25,7 +26,7 @@ int main(int argc, char *argv[]) {
     unsigned char original = 0b01101100; // 108
     int bits = 3;
 
-    cout << "Original:\n";
+    cout << "Original: \n";
     cout << "Binario: ";
     printBits(original);
     cout << " | Decimal: " << (int)original << "\n\n";
@@ -187,6 +188,85 @@ int main(int argc, char *argv[]) {
     // Desplazamiento a la derecha
     shiftRight(pixel, 3, 3);
     imprimirRGB(pixel, "Despues de desplazamiento a la derecha 3 bits:");
+
+    */
+
+    cout << "\n=== PRUEBA MANUAL DE TRANSFORMACIONES SOBRE I_O.bmp ===" << endl;
+
+    // Cargar imagen original I_O
+    int width_o = 0, height_o = 0;
+    unsigned char* I_O = loadPixels("C:/Caso 1/I_O.bmp", width_o, height_o);
+    if (!I_O) {
+        cout << "Error al cargar I_O.bmp\n";
+        return -1;
+    }
+
+    // Cargar imagen IM
+    int width_im = 0, height_im = 0;
+    unsigned char* I_M = loadPixels("C:/Caso 1/I_M.bmp", width_im, height_im);
+    if (!I_M) {
+        cout << "Error al cargar I_M.bmp\n";
+        return -1;
+    }
+
+    // Cargar máscara
+    int width_m = 0, height_m = 0;
+    unsigned char* mascara = loadPixels("C:/Caso 1/M.bmp", width_m, height_m);
+    if (!mascara) {
+        cout << "Error al cargar la máscara\n";
+        return -1;
+    }
+
+    // Cargar archivo M1.txt
+    int seed = 0, n_pixels = 0;
+    unsigned int* resultado = loadSeedMasking("C:/Caso 1/M1.txt", seed, n_pixels);
+    if (!resultado) {
+        cout << "Error al cargar M1.txt\n";
+        return -1;
+    }
+
+    // Prueba 1: XOR entre I_O y I_M
+    cout << "\nProbar XOR entre I_O y I_M..." << endl;
+    unsigned char* copiaXOR = new unsigned char[width_o * height_o * 3];
+    for (int i = 0; i < width_o * height_o * 3; i++) copiaXOR[i] = I_O[i];
+    xorPixels(copiaXOR, I_M, width_o * height_o * 3);
+    bool ok1 = verificarEnmascaramiento(copiaXOR, mascara, resultado, seed, height_m, width_m, width_o, height_o);
+    delete[] copiaXOR;
+
+    // Prueba 2: rotación a la derecha
+    cout << "\nProbar rotación a la derecha..." << endl;
+    bool ok2 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, rotateRight);
+
+    // Prueba 3: rotación a la izquierda
+    cout << "\nProbar rotación a la izquierda..." << endl;
+    bool ok3 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, rotateLeft);
+
+    // Prueba 4: desplazamiento a la izquierda
+    cout << "\nProbar desplazamiento a la izquierda..." << endl;
+    bool ok4 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, shiftLeft);
+
+    // Prueba 5: desplazamiento a la derecha
+    cout << "\nProbar desplazamiento a la derecha..." << endl;
+    bool ok5 = probarTransformacion(I_O, width_o, height_o, mascara, resultado, seed, height_m, width_m, shiftRight);
+
+    // Mostrar resumen
+    cout << "\n=== RESULTADOS DE LAS TRANSFORMACIONES ===" << endl;
+    if (ok1) cout << "Correcto: XOR con I_M coincide con M1.txt\n";
+    if (ok2) cout << "Correcto: ROTACION DERECHA coincide con M1.txt\n";
+    if (ok3) cout << "Correcto: ROTACION IZQUIERDA coincide con M1.txt\n";
+    if (ok4) cout << "Correcto: DESPLAZAMIENTO IZQUIERDA coincide con M1.txt\n";
+    if (ok5) cout << "Correcto: DESPLAZAMIENTO DERECHA coincide con M1.txt\n";
+
+    if (!ok1 && !ok2 && !ok3 && !ok4 && !ok5) {
+        cout << "Incorrecto: Ninguna transformación coincidió con M1.txt\n";
+    }
+
+    delete[] I_O;
+    delete[] I_M;
+    delete[] mascara;
+    delete[] resultado;
+
+
 
     return 0;
 }
