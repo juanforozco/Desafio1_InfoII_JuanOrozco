@@ -219,9 +219,9 @@ int main(int argc, char *argv[]) {
 
     // Cargar archivo M1.txt
     int seed = 0, n_pixels = 0;
-    unsigned int* resultado = loadSeedMasking("C:/Caso1/M1.txt", seed, n_pixels);
+    unsigned int* resultado = loadSeedMasking("C:/Caso1/M2.txt", seed, n_pixels);
     if (!resultado) {
-        cout << "Error al cargar M1.txt\n";
+        cout << "Error al cargar M2.txt\n";
         return -1;
     }
 
@@ -251,14 +251,14 @@ int main(int argc, char *argv[]) {
 
     // Mostrar resumen
     cout << "\n=== RESULTADOS DE LAS TRANSFORMACIONES ===" << endl;
-    if (ok1) cout << "Correcto: XOR con I_M coincide con M1.txt\n";
-    if (ok2) cout << "Correcto: ROTACION DERECHA coincide con M1.txt\n";
-    if (ok3) cout << "Correcto: ROTACION IZQUIERDA coincide con M1.txt\n";
-    if (ok4) cout << "Correcto: DESPLAZAMIENTO IZQUIERDA coincide con M1.txt\n";
-    if (ok5) cout << "Correcto: DESPLAZAMIENTO DERECHA coincide con M1.txt\n";
+    if (ok1) cout << "Correcto: XOR con I_M coincide con Mx.txt\n";
+    if (ok2) cout << "Correcto: ROTACION DERECHA coincide con Mx.txt\n";
+    if (ok3) cout << "Correcto: ROTACION IZQUIERDA coincide con Mx.txt\n";
+    if (ok4) cout << "Correcto: DESPLAZAMIENTO IZQUIERDA coincide con Mx.txt\n";
+    if (ok5) cout << "Correcto: DESPLAZAMIENTO DERECHA coincide con Mx.txt\n";
 
     if (!ok1 && !ok2 && !ok3 && !ok4 && !ok5) {
-        cout << "Incorrecto: Ninguna transformacion coincidio con M1.txt\n";
+        cout << "Incorrecto: Ninguna transformacion coincidio con Mx.txt\n";
     }
 
     delete[] I_O;

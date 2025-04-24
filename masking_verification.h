@@ -5,5 +5,4 @@ bool verificarEnmascaramiento(unsigned char* imagen, unsigned char* mascara, uns
                               int seed, int m, int n, int width, int height);
 
 
-
 #endif // MASKING_VERIFICATION_H
