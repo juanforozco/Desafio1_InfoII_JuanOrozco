@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
 
     */
 
-    cout << "\n=== PRUEBA MANUAL DE TRANSFORMACIONES SOBRE I_O.bmp ===" << endl;
+    /*cout << "\n=== PRUEBA MANUAL DE TRANSFORMACIONES SOBRE I_O.bmp ===" << endl;
 
     // Cargar imagen original I_O
     int width_o = 0, height_o = 0;
@@ -265,6 +265,67 @@ int main(int argc, char *argv[]) {
     delete[] I_M;
     delete[] mascara;
     delete[] resultado;
+*/
+
+    // === PRUEBA DE SECUENCIA: XOR + ROTACIÓN DERECHA ===
+    cout << "\n=== PRUEBA SECUENCIA XOR + ROTACION DERECHA ===" << endl;
+
+    // Cargar imagen original I_O
+    int width_o = 0, height_o = 0;
+    unsigned char* I_O = loadPixels("C:/Caso1/I_O.bmp", width_o, height_o);
+    if (!I_O) {
+        cout << "Error al cargar I_O.bmp\n";
+        return -1;
+    }
+
+    // Cargar imagen IM
+    int width_im = 0, height_im = 0;
+    unsigned char* I_M = loadPixels("C:/Caso1/I_M.bmp", width_im, height_im);
+    if (!I_M) {
+        cout << "Error al cargar I_M.bmp\n";
+        return -1;
+    }
+
+    // Cargar máscara
+    int width_m = 0, height_m = 0;
+    unsigned char* mascara = loadPixels("C:/Caso1/M.bmp", width_m, height_m);
+    if (!mascara) {
+        cout << "Error al cargar la máscara\n";
+        return -1;
+    }
+
+    // Cargar archivo M2.txt
+    int seed2 = 0, n_pixels2 = 0;
+    unsigned int* resultado2 = loadSeedMasking("C:/Caso1/M2.txt", seed2, n_pixels2);
+    if (!resultado2) {
+        cout << "Error al cargar M2.txt\n";
+        return -1;
+    }
+
+    // Paso 1: aplicar XOR
+    int totalBytes = width_o * height_o * 3;
+    unsigned char* copiaSecuencia = new unsigned char[totalBytes];
+    for (int i = 0; i < totalBytes; i++) copiaSecuencia[i] = I_O[i];
+    xorPixels(copiaSecuencia, I_M, totalBytes);
+
+    // Paso 2: aplicar rotación a la derecha
+    rotateRight(copiaSecuencia, totalBytes, 3);
+
+    // Paso 3: verificar enmascaramiento con M2.txt
+    bool okSecuencia = verificarEnmascaramiento(copiaSecuencia, mascara, resultado2,
+                                                seed2, height_m, width_m, width_o, height_o);
+
+    if (okSecuencia) {
+        cout << "La secuencia XOR + ROT_RIGHT_3 genera correctamente M2.txt\n";
+    } else {
+        cout << "La secuencia no coincide con M2.txt\n";
+    }
+
+    delete[] resultado2;
+    delete[] copiaSecuencia;
+    delete[] I_O;
+    delete[] I_M;
+    delete[] mascara;
 
 
 
