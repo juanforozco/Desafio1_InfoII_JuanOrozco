@@ -497,6 +497,8 @@ int main(int argc, char *argv[]) {
         anchos[i] = width_masc;
     }
 
+    /*
+    //Verificar y corregir el crasheo
     cout << "\nVerificando consistencia de los datos cargados...\n";
     for (int i = 0; i <= cantidadTransformaciones; i++) {
         cout << "Mx.txt[" << i << "] - Seed: " << semillas[i]
@@ -504,12 +506,12 @@ int main(int argc, char *argv[]) {
              << ", Ancho: " << anchos[i]
              << ", Primer valor: " << archivosTxt[i][0] << endl;
     }
+    */
 
     // 5. Llamar a encontrarTransformacionesGenerico
     encontrarTransformacionesGenerico(I_D, I_M, M,
                                       archivosTxt, semillas, altos, anchos,
-                                      width_id, height_id,
-                                      cantidadTransformaciones);
+                                      cantidadTransformaciones, width_id, height_id);
 
     // 6. Liberar memoria
     delete[] I_D;

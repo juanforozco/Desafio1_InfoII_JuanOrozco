@@ -355,6 +355,15 @@ bool encontrarTransformacionesGenerico(
                 // Aplicar la transformación inversa
                 transformaciones[tipo][b](copia, total);
 
+                /*
+                // Verificar y corregir el crasheo
+                string nombre1 = "ROT_RIGHT_" + to_string(paso);
+                string nombre2 = "SHIFT_LEFT_" + to_string(tipo);
+                string nombre3 = "ROT_LEFT_" + to_string(b);
+
+                cout << "Intentando: [" << nombre1 << " -> " << nombre2 << " -> " << nombre3 << "]" << endl;
+                */
+
                 // Verificar si coincide con el archivo Mx.txt
                 if (verificarEnmascaramiento(copia, mascara, resultados[paso],
                                              seeds[paso], alturas[paso], anchuras[paso], width, height)) {
