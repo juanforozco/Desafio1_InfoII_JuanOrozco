@@ -377,7 +377,6 @@ int main(int argc, char *argv[]) {
     delete[] mascara1;
     delete[] resultadoM2;
 
-*/
 
     cout << "\n=== PRUEBA FUNCION encontrarTransformacionesCaso1 ===" << endl;
 
@@ -441,6 +440,84 @@ int main(int argc, char *argv[]) {
     delete[] M;
     delete[] resultadoM1;
     delete[] resultadoM2;
+*/
+
+    cout << "\n=== PRUEBA ALGORITMO DE INGENIERIA INVERSA ===" << endl;
+
+    // Rutas base
+    QString base = "C:/Caso2/";
+
+    // 1. Cargar I_D.bmp (resultado final después de todas las transformaciones)
+    int width_id = 0, height_id = 0;
+    unsigned char* I_D = loadPixels(base + "I_D.bmp", width_id, height_id);
+    if (!I_D) {
+        cout << "Error al cargar I_D.bmp" << endl;
+        return -1;
+    }
+
+    // 2. Cargar I_M.bmp (imagen aleatoria usada en XOR)
+    int width_im = 0, height_im = 0;
+    unsigned char* I_M = loadPixels(base + "I_M.bmp", width_im, height_im);
+    if (!I_M) {
+        cout << "Error al cargar I_M.bmp" << endl;
+        delete[] I_D;
+        return -1;
+    }
+
+    // 3. Cargar M.bmp (máscara)
+    int width_masc = 0, height_masc = 0;
+    unsigned char* M = loadPixels(base + "M.bmp", width_masc, height_masc);
+    if (!M) {
+        cout << "Error al cargar M.bmp" << endl;
+        delete[] I_D; delete[] I_M;
+        return -1;
+    }
+
+    // 4. Cargar M0.txt a M6.txt
+    int cantidadTransformaciones = 6;
+    unsigned int* archivosTxt[7];
+    int semillas[7];
+    int altos[7], anchos[7];
+
+    for (int i = 0; i <= cantidadTransformaciones; i++) {
+        QString nombre = base + "M" + QString::number(i) + ".txt";
+        semillas[i] = 0;
+        archivosTxt[i] = loadSeedMasking(nombre.toStdString().c_str(), semillas[i], altos[i]);
+
+        if (!archivosTxt[i]) {
+            cout << "Error al cargar " << nombre.toStdString() << endl;
+            // Liberar lo que se haya cargado
+            for (int j = 0; j < i; j++) delete[] archivosTxt[j];
+            delete[] I_D; delete[] I_M; delete[] M;
+            return -1;
+        }
+
+        // Mismo alto y ancho de máscara para todos
+        altos[i] = height_masc;
+        anchos[i] = width_masc;
+    }
+
+    cout << "\nVerificando consistencia de los datos cargados...\n";
+    for (int i = 0; i <= cantidadTransformaciones; i++) {
+        cout << "Mx.txt[" << i << "] - Seed: " << semillas[i]
+             << ", Altura: " << altos[i]
+             << ", Ancho: " << anchos[i]
+             << ", Primer valor: " << archivosTxt[i][0] << endl;
+    }
+
+    // 5. Llamar a encontrarTransformacionesGenerico
+    encontrarTransformacionesGenerico(I_D, I_M, M,
+                                      archivosTxt, semillas, altos, anchos,
+                                      width_id, height_id,
+                                      cantidadTransformaciones);
+
+    // 6. Liberar memoria
+    delete[] I_D;
+    delete[] I_M;
+    delete[] M;
+    for (int i = 0; i <= cantidadTransformaciones; i++) {
+        delete[] archivosTxt[i];
+    }
 
     return 0;
 }

@@ -88,6 +88,21 @@ void desplazarIzq6(unsigned char* d, int s);
 void desplazarIzq7(unsigned char* d, int s);
 void desplazarIzq8(unsigned char* d, int s);
 
+/*
+ * PARTE 2: ALGORITMO DE INGENIERÍA INVERSA PARA DETECTAR QUE TRANSFORMACIONES FUERON REALIZADAS Y EN QUE ORDEN.
+ */
+
+bool encontrarTransformacionesGenerico(
+    unsigned char* imagenInicial,  // I_D
+    unsigned char* imagenAleatoria, // I_M
+    unsigned char* mascara,         // M
+    unsigned int** resultados,      // Arreglo de punteros a archivos Mx.txt
+    int* seeds,                     // Arreglo de semillas de cada archivo Mx.txt
+    int* alturas, int* anchuras,    // Altura y ancho de la máscara en cada paso
+    int pasos,                      // Número de transformaciones (cantidad de archivos Mx.txt)
+    int width, int height           // Dimensiones de la imagen
+    );
+
 typedef void (*OperacionBit)(unsigned char*, int);
 
 #endif // BIT_OPERATIONS_H

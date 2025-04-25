@@ -309,4 +309,77 @@ OperacionBit desplazamientosIzquierda[9] = {
     desplazarIzq5, desplazarIzq6, desplazarIzq7, desplazarIzq8
 };
 
+/*
+ * PARTE 2: ALGORITMO DE INGENIERÍA INVERSA PARA DETECTAR QUE TRANSFORMACIONES FUERON REALIZADAS Y EN QUE ORDEN.
+ */
+
+bool encontrarTransformacionesGenerico(
+    unsigned char* imagenInicial,  // I_D
+    unsigned char* imagenAleatoria, // I_M
+    unsigned char* mascara,         // M
+    unsigned int** resultados,      // Arreglo de punteros a archivos Mx.txt
+    int* seeds,                     // Arreglo de semillas de cada archivo Mx.txt
+    int* alturas, int* anchuras,    // Altura y ancho de la máscara en cada paso
+    int pasos,                      // Número de transformaciones (cantidad de archivos Mx.txt)
+    int width, int height           // Dimensiones de la imagen
+    ) {
+    int total = width * height * 3;
+
+    // Paso 1: XOR inverso para obtener Pn.bmp (antes del último XOR)
+    unsigned char* actual = new unsigned char[total];
+    for (int i = 0; i < total; ++i) {
+        actual[i] = imagenInicial[i] ^ imagenAleatoria[i];
+    }
+
+    // Arreglo para registrar las transformaciones aplicadas
+    const char* nombres[4] = {"ROT_RIGHT", "ROT_LEFT", "SHIFT_RIGHT", "SHIFT_LEFT"};
+    OperacionBit* transformaciones[4] = {
+        rotacionesDerecha,
+        rotacionesIzquierda,
+        desplazamientosDerecha,
+        desplazamientosIzquierda
+    };
+
+    // Vamos hacia atrás, desde Mx.txt hasta M1.txt
+    for (int paso = pasos - 1; paso >= 0; --paso) {
+        bool encontrado = false;
+
+        // Recorrer todas las operaciones posibles
+        for (int tipo = 0; tipo < 4 && !encontrado; ++tipo) {
+            for (int b = 0; b <= 8 && !encontrado; ++b) {
+
+                // Hacer copia del arreglo actual
+                unsigned char* copia = new unsigned char[total];
+                for (int i = 0; i < total; ++i) copia[i] = actual[i];
+
+                // Aplicar la transformación inversa
+                transformaciones[tipo][b](copia, total);
+
+                // Verificar si coincide con el archivo Mx.txt
+                if (verificarEnmascaramiento(copia, mascara, resultados[paso],
+                                             seeds[paso], alturas[paso], anchuras[paso], width, height)) {
+                    cout << "Paso " << paso + 1 << ": " << nombres[tipo] << " " << b << " bits\n";
+                    encontrado = true;
+                    delete[] actual;
+                    actual = copia;
+                } else {
+                    delete[] copia;
+                }
+            }
+        }
+
+        if (!encontrado) {
+            cout << "No se encontro transformacion para el paso " << paso + 1 << endl;
+            delete[] actual;
+            return false;
+        }
+    }
+
+    // Verificar si lo que queda es I_O haciendo XOR con I_M
+    for (int i = 0; i < total; ++i) actual[i] = actual[i] ^ imagenAleatoria[i];
+
+    cout << "\nTransformaciones encontradas exitosamente.\n";
+    delete[] actual;
+    return true;
+}
 
