@@ -141,6 +141,13 @@ bool probarTransformacion(unsigned char* original, int width, int height,
  *                 Confirma que secuencia encontro o si obtuvo algún error.
  */
 
+
+/*
+ * Funcion para determinar la secuencia de transformaciones del caso 1.
+ * Funcionamiento: Se aplica exactamente el orden de transformaciones del caso 1 de acuerdo a la guía.
+ *                 Posteriormente se aplica 'verificarEnmascaramiento' para comparar con los archivos Mx.txt
+ *                 de cada paso y confirmar así, la secuencia y la correspondencia al resultado.
+ */
 bool encontrarTransformacionesCaso1(
     unsigned char* original, // I_O
     unsigned char* imagen_aleatoria, // I_M
@@ -185,4 +192,88 @@ bool encontrarTransformacionesCaso1(
     return true;
 }
 
+
+/*
+ * FUNCIÓN CORE DEL DESAFÍO:
+ */
+
+/*
+ * PARTE 1: Funciones de transformaciones para cada cantidad de bits posibles.
+ */
+// Declaración de alias para punteros a funciones de transformación bit a bit: Se usa para no declararla una por una
+        //sino, para guardarlas en un arreglo y recorrerlo.
+
+typedef void (*OperacionBit)(unsigned char*, int);
+
+// ROTACIONES A LA DERECHA
+void rotarDer1(unsigned char* d, int s) {
+    rotateRight(d, s, 1); }
+void rotarDer2(unsigned char* d, int s) {
+    rotateRight(d, s, 2); }
+void rotarDer3(unsigned char* d, int s) {
+    rotateRight(d, s, 3); }
+void rotarDer4(unsigned char* d, int s) {
+    rotateRight(d, s, 4); }
+void rotarDer5(unsigned char* d, int s) {
+    rotateRight(d, s, 5); }
+void rotarDer6(unsigned char* d, int s) {
+    rotateRight(d, s, 6); }
+void rotarDer7(unsigned char* d, int s) {
+    rotateRight(d, s, 7); }
+void rotarDer8(unsigned char* d, int s) {
+    rotateRight(d, s, 8); }
+
+// ROTACIONES A LA IZQUIERDA
+void rotarIzq1(unsigned char* d, int s) {
+    rotateLeft(d, s, 1); }
+void rotarIzq2(unsigned char* d, int s) {
+    rotateLeft(d, s, 2); }
+void rotarIzq3(unsigned char* d, int s) {
+    rotateLeft(d, s, 3); }
+void rotarIzq4(unsigned char* d, int s) {
+    rotateLeft(d, s, 4); }
+void rotarIzq5(unsigned char* d, int s) {
+    rotateLeft(d, s, 5); }
+void rotarIzq6(unsigned char* d, int s) {
+    rotateLeft(d, s, 6); }
+void rotarIzq7(unsigned char* d, int s) {
+    rotateLeft(d, s, 7); }
+void rotarIzq8(unsigned char* d, int s) {
+    rotateLeft(d, s, 8); }
+
+// DESPLAZAMIENTOS A LA DERECHA
+void desplazarDer1(unsigned char* d, int s) {
+    shiftRight(d, s, 1); }
+void desplazarDer2(unsigned char* d, int s) {
+    shiftRight(d, s, 2); }
+void desplazarDer3(unsigned char* d, int s) {
+    shiftRight(d, s, 3); }
+void desplazarDer4(unsigned char* d, int s) {
+    shiftRight(d, s, 4); }
+void desplazarDer5(unsigned char* d, int s) {
+    shiftRight(d, s, 5); }
+void desplazarDer6(unsigned char* d, int s) {
+    shiftRight(d, s, 6); }
+void desplazarDer7(unsigned char* d, int s) {
+    shiftRight(d, s, 7); }
+void desplazarDer8(unsigned char* d, int s) {
+    shiftRight(d, s, 8); }
+
+// DESPLAZAMIENTOS A LA IZQUIERDA
+void desplazarIzq1(unsigned char* d, int s) {
+    shiftLeft(d, s, 1); }
+void desplazarIzq2(unsigned char* d, int s) {
+    shiftLeft(d, s, 2); }
+void desplazarIzq3(unsigned char* d, int s) {
+    shiftLeft(d, s, 3); }
+void desplazarIzq4(unsigned char* d, int s) {
+    shiftLeft(d, s, 4); }
+void desplazarIzq5(unsigned char* d, int s) {
+    shiftLeft(d, s, 5); }
+void desplazarIzq6(unsigned char* d, int s) {
+    shiftLeft(d, s, 6); }
+void desplazarIzq7(unsigned char* d, int s) {
+    shiftLeft(d, s, 7); }
+void desplazarIzq8(unsigned char* d, int s) {
+    shiftLeft(d, s, 8); }
 

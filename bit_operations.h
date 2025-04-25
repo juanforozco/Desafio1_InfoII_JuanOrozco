@@ -26,6 +26,7 @@ bool probarTransformacion(unsigned char* original, int width, int height,
                           void (*operacion)(unsigned char*, int));
 
 
+//Funcion para determinar la secuencia de transformaciones del caso 1.
 bool encontrarTransformacionesCaso1(
     unsigned char* original, // I_O
     unsigned char* imagen_aleatoria, // I_M
@@ -34,6 +35,54 @@ bool encontrarTransformacionesCaso1(
     unsigned int* resultadoM2, int seed2, int m2, int n2,
     int width, int height
     );
+
+/*
+ * FUNCIÓN CORE DEL DESAFÍO:
+ */
+
+/*
+ * PARTE 1: Funciones de transformaciones para cada cantidad de bits posibles.
+ */
+
+// ROTACIONES A LA DERECHA
+void rotarDer1(unsigned char* d, int s);
+void rotarDer2(unsigned char* d, int s);
+void rotarDer3(unsigned char* d, int s);
+void rotarDer4(unsigned char* d, int s);
+void rotarDer5(unsigned char* d, int s);
+void rotarDer6(unsigned char* d, int s);
+void rotarDer7(unsigned char* d, int s);
+void rotarDer8(unsigned char* d, int s);
+
+// ROTACIONES A LA IZQUIERDA
+void rotarIzq1(unsigned char* d, int s);
+void rotarIzq2(unsigned char* d, int s);
+void rotarIzq3(unsigned char* d, int s);
+void rotarIzq4(unsigned char* d, int s);
+void rotarIzq5(unsigned char* d, int s);
+void rotarIzq6(unsigned char* d, int s);
+void rotarIzq7(unsigned char* d, int s);
+void rotarIzq8(unsigned char* d, int s);
+
+// DESPLAZAMIENTOS A LA DERECHA
+void desplazarDer1(unsigned char* d, int s);
+void desplazarDer2(unsigned char* d, int s);
+void desplazarDer3(unsigned char* d, int s);
+void desplazarDer4(unsigned char* d, int s);
+void desplazarDer5(unsigned char* d, int s);
+void desplazarDer6(unsigned char* d, int s);
+void desplazarDer7(unsigned char* d, int s);
+void desplazarDer8(unsigned char* d, int s);
+
+// DESPLAZAMIENTOS A LA IZQUIERDA
+void desplazarIzq1(unsigned char* d, int s);
+void desplazarIzq2(unsigned char* d, int s);
+void desplazarIzq3(unsigned char* d, int s);
+void desplazarIzq4(unsigned char* d, int s);
+void desplazarIzq5(unsigned char* d, int s);
+void desplazarIzq6(unsigned char* d, int s);
+void desplazarIzq7(unsigned char* d, int s);
+void desplazarIzq8(unsigned char* d, int s);
 
 
 #endif // BIT_OPERATIONS_H
