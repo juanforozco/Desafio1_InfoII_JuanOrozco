@@ -272,7 +272,7 @@ int main(int argc, char *argv[]) {
     delete[] I_M;
     delete[] mascara;
     delete[] resultado;
-*/
+
 
     // === PRUEBA DE SECUENCIA: XOR + ROTACIÓN DERECHA ===
     cout << "\n=== PRUEBA SECUENCIA XOR + ROTACION DERECHA ===" << endl;
@@ -358,6 +358,8 @@ int main(int argc, char *argv[]) {
     if (!resultadoM2) { cout << "Error al cargar M2.txt\n"; return -1; }
 
     // Ejecutar la prueba
+    // La memoria copia solo se usa en esta función y se libera adecuadamente: Ya que verificarEnmascaramiento
+    // (interna en probarTr...) solo lee pero nunca lo guarda. - Mensaje debido a la advertencia.
     bool ok = probarTransformacion(IO, widthO, heightO,
                                    mascara, resultadoM2, seedM2,
                                    heightM, widthM,
@@ -375,6 +377,70 @@ int main(int argc, char *argv[]) {
     delete[] mascara1;
     delete[] resultadoM2;
 
+*/
+
+    cout << "\n=== PRUEBA FUNCION encontrarTransformacionesCaso1 ===" << endl;
+
+    // Cargar I_O.bmp
+    int width_o = 0, height_o = 0;
+    unsigned char* I_O = loadPixels("C:/Caso1/I_O.bmp", width_o, height_o);
+    if (!I_O) {
+        cout << "Error al cargar I_O.bmp\n";
+        return -1;
+    }
+
+    // Cargar I_M.bmp
+    int width_im = 0, height_im = 0;
+    unsigned char* I_M = loadPixels("C:/Caso1/I_M.bmp", width_im, height_im);
+    if (!I_M) {
+        cout << "Error al cargar I_M.bmp\n";
+        return -1;
+    }
+
+    // Cargar M.bmp
+    int width_m = 0, height_m = 0;
+    unsigned char* M = loadPixels("C:/Caso1/M.bmp", width_m, height_m);
+    if (!M) {
+        cout << "Error al cargar M.bmp\n";
+        return -1;
+    }
+
+    // Cargar M1.txt
+    int seed1 = 0, n_pixels1 = 0;
+    unsigned int* resultadoM1 = loadSeedMasking("C:/Caso1/M1.txt", seed1, n_pixels1);
+    if (!resultadoM1) {
+        cout << "Error al cargar M1.txt\n";
+        return -1;
+    }
+
+    // Cargar M2.txt
+    int seed2 = 0, n_pixels2 = 0;
+    unsigned int* resultadoM2 = loadSeedMasking("C:/Caso1/M2.txt", seed2, n_pixels2);
+    if (!resultadoM2) {
+        cout << "Error al cargar M2.txt\n";
+        return -1;
+    }
+
+    // Ejecutar la función
+    bool encontrado = encontrarTransformacionesCaso1(
+        I_O, I_M, M,
+        resultadoM1, seed1, height_m, width_m,
+        resultadoM2, seed2, height_m, width_m,
+        width_o, height_o
+        );
+
+    if (encontrado) {
+        cout << "Secuencia correcta detectada exitosamente.\n";
+    } else {
+        cout << "No se detecto la secuencia esperada.\n";
+    }
+
+    // Liberar memoria
+    delete[] I_O;
+    delete[] I_M;
+    delete[] M;
+    delete[] resultadoM1;
+    delete[] resultadoM2;
 
     return 0;
 }

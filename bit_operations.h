@@ -26,4 +26,14 @@ bool probarTransformacion(unsigned char* original, int width, int height,
                           void (*operacion)(unsigned char*, int));
 
 
+bool encontrarTransformacionesCaso1(
+    unsigned char* original, // I_O
+    unsigned char* imagen_aleatoria, // I_M
+    unsigned char* mascara, // M
+    unsigned int* resultadoM1, int seed1, int m1, int n1,
+    unsigned int* resultadoM2, int seed2, int m2, int n2,
+    int width, int height
+    );
+
+
 #endif // BIT_OPERATIONS_H

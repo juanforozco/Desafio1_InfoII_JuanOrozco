@@ -1,5 +1,8 @@
 #include "bit_operations.h"
 #include "masking_verification.h" // Necesario para llamar a verificarEnmascaramiento
+#include <iostream>
+
+using namespace std;
 
 /*
  * Funcion XOR entre dos arreglos de bytes.
@@ -118,6 +121,68 @@ bool probarTransformacion(unsigned char* original, int width, int height,
     return exito;
 }
 
+/*
+ * Funcion de ingenieria inversa especifica para caso 1 proporcionado como material de desafío.
+ *      A partir de acá se podría generalizar.
+ * unsigned char* IO: iagen original (I_O.bmp), ocupa 8 bits (0-255)
+ * unsigned char* IM: iagen de enmascaramiento (I_O.bmp), ocupa 8 bits (0-255)
+ * int width, height: Dimensiones de IO.
+ * unsigned char* mascara: imagen de la máscara (M.bmp), para aplicar el enmascaramiento.
+ * int m, n: dimensiones de la máscara (filas y columnas).
+ * unsigned int* M1: datos del archivo M1.txt (resultado del enmascaramiento). Tipo unsigned int* porque pueden exceder 255 (8 bits) ya que son sumas.
+ * int seed1: desplazamiento usado en M1.txt.
+ * unsigned int* M2: datos del archivo M2.txt.
+ * int seed2: desplazamiento usado en M2.txt.
+ * Funcionamiento: Recibe una imagen, una imagen aleatoria de enmascaramiento y una mascara.
+ *                 Crea una copia de IO para no modificarla de acuerdo al tamaño de la misma.
+ *                 Aplica las transformaciones del caso 1:
+ *                 1. XOR entre IO e IM. Aqui verifica si el resultado corresponde con M1.txt
+ *                 2. Rotacion de 3 bits a la derecha y verifica con M2.txt.
+ *                 Confirma que secuencia encontro o si obtuvo algún error.
+ */
 
+bool encontrarTransformacionesCaso1(
+    unsigned char* original, // I_O
+    unsigned char* imagen_aleatoria, // I_M
+    unsigned char* mascara, // M
+    unsigned int* resultadoM1, int seed1, int m1, int n1,
+    unsigned int* resultadoM2, int seed2, int m2, int n2,
+    int width, int height
+    ) {
+    int total = width * height * 3;
+
+    // Crear copia dinámica de I_O
+    unsigned char* copia = new unsigned char[total];
+    for (int i = 0; i < total; ++i) copia[i] = original[i];
+
+    // Paso 1: XOR con I_M
+    xorPixels(copia, imagen_aleatoria, total);
+
+    // Verificar con M1.txt
+    bool ok1 = verificarEnmascaramiento(copia, mascara, resultadoM1,
+                                        seed1, m1, n1, width, height);
+    if (!ok1) {
+        cout << "Fallo al verificar con M1.txt tras XOR.\n";
+        delete[] copia;
+        return false;
+    }
+
+    // Paso 2: rotación a la derecha 3 bits
+    rotateRight(copia, total, 3);
+
+    // Verificar con M2.txt
+    bool ok2 = verificarEnmascaramiento(copia, mascara, resultadoM2,
+                                        seed2, m2, n2, width, height);
+    if (!ok2) {
+        cout << "Fallo al verificar con M2.txt tras ROT_RIGHT_3.\n";
+        delete[] copia;
+        return false;
+    }
+
+    // Si pasó ambas verificaciones, está correcta la cadena
+    cout << "Secuencia encontrada: XOR + ROT_RIGHT_3\n";
+    delete[] copia;
+    return true;
+}
 
 
