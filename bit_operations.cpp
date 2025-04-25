@@ -206,6 +206,8 @@ bool encontrarTransformacionesCaso1(
 typedef void (*OperacionBit)(unsigned char*, int);
 
 // ROTACIONES A LA DERECHA
+void rotarDer0(unsigned char* d, int s) {
+    rotateRight(d, s, 0); }
 void rotarDer1(unsigned char* d, int s) {
     rotateRight(d, s, 1); }
 void rotarDer2(unsigned char* d, int s) {
@@ -224,6 +226,8 @@ void rotarDer8(unsigned char* d, int s) {
     rotateRight(d, s, 8); }
 
 // ROTACIONES A LA IZQUIERDA
+void rotarIzq0(unsigned char* d, int s) {
+    rotateLeft(d, s, 0); }
 void rotarIzq1(unsigned char* d, int s) {
     rotateLeft(d, s, 1); }
 void rotarIzq2(unsigned char* d, int s) {
@@ -242,6 +246,8 @@ void rotarIzq8(unsigned char* d, int s) {
     rotateLeft(d, s, 8); }
 
 // DESPLAZAMIENTOS A LA DERECHA
+void desplazarDer0(unsigned char* d, int s) {
+    shiftRight(d, s, 0); }
 void desplazarDer1(unsigned char* d, int s) {
     shiftRight(d, s, 1); }
 void desplazarDer2(unsigned char* d, int s) {
@@ -260,6 +266,8 @@ void desplazarDer8(unsigned char* d, int s) {
     shiftRight(d, s, 8); }
 
 // DESPLAZAMIENTOS A LA IZQUIERDA
+void desplazarIzq0(unsigned char* d, int s) {
+    shiftLeft(d, s, 0); }
 void desplazarIzq1(unsigned char* d, int s) {
     shiftLeft(d, s, 1); }
 void desplazarIzq2(unsigned char* d, int s) {
@@ -276,4 +284,29 @@ void desplazarIzq7(unsigned char* d, int s) {
     shiftLeft(d, s, 7); }
 void desplazarIzq8(unsigned char* d, int s) {
     shiftLeft(d, s, 8); }
+
+//ARREGLO CON TODAS LAS TRANSFORMACIONES PARA PODER RECORRERLAS TODAS:
+
+// Rotaciones
+OperacionBit rotacionesDerecha[9] = {
+    rotarDer0, rotarDer1, rotarDer2, rotarDer3, rotarDer4,
+    rotarDer5, rotarDer6, rotarDer7, rotarDer8
+};
+
+OperacionBit rotacionesIzquierda[9] = {
+    rotarIzq0, rotarIzq1, rotarIzq2, rotarIzq3, rotarIzq4,
+    rotarIzq5, rotarIzq6, rotarIzq7, rotarIzq8
+};
+
+// Desplazamientos
+OperacionBit desplazamientosDerecha[9] = {
+    desplazarDer0, desplazarDer1, desplazarDer2, desplazarDer3, desplazarDer4,
+    desplazarDer5, desplazarDer6, desplazarDer7, desplazarDer8
+};
+
+OperacionBit desplazamientosIzquierda[9] = {
+    desplazarIzq0, desplazarIzq1, desplazarIzq2, desplazarIzq3, desplazarIzq4,
+    desplazarIzq5, desplazarIzq6, desplazarIzq7, desplazarIzq8
+};
+
 

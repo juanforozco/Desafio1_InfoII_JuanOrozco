@@ -45,6 +45,7 @@ bool encontrarTransformacionesCaso1(
  */
 
 // ROTACIONES A LA DERECHA
+void rotarDer0(unsigned char* d, int s);
 void rotarDer1(unsigned char* d, int s);
 void rotarDer2(unsigned char* d, int s);
 void rotarDer3(unsigned char* d, int s);
@@ -55,6 +56,7 @@ void rotarDer7(unsigned char* d, int s);
 void rotarDer8(unsigned char* d, int s);
 
 // ROTACIONES A LA IZQUIERDA
+void rotarIzq0(unsigned char* d, int s);
 void rotarIzq1(unsigned char* d, int s);
 void rotarIzq2(unsigned char* d, int s);
 void rotarIzq3(unsigned char* d, int s);
@@ -65,6 +67,7 @@ void rotarIzq7(unsigned char* d, int s);
 void rotarIzq8(unsigned char* d, int s);
 
 // DESPLAZAMIENTOS A LA DERECHA
+void desplazarDer0(unsigned char* d, int s);
 void desplazarDer1(unsigned char* d, int s);
 void desplazarDer2(unsigned char* d, int s);
 void desplazarDer3(unsigned char* d, int s);
@@ -75,6 +78,7 @@ void desplazarDer7(unsigned char* d, int s);
 void desplazarDer8(unsigned char* d, int s);
 
 // DESPLAZAMIENTOS A LA IZQUIERDA
+void desplazarIzq0(unsigned char* d, int s);
 void desplazarIzq1(unsigned char* d, int s);
 void desplazarIzq2(unsigned char* d, int s);
 void desplazarIzq3(unsigned char* d, int s);
@@ -84,5 +88,6 @@ void desplazarIzq6(unsigned char* d, int s);
 void desplazarIzq7(unsigned char* d, int s);
 void desplazarIzq8(unsigned char* d, int s);
 
+typedef void (*OperacionBit)(unsigned char*, int);
 
 #endif // BIT_OPERATIONS_H
