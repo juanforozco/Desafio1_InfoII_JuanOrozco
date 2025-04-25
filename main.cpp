@@ -14,6 +14,13 @@ using namespace std;
 
 void printBits(unsigned char byte);
 void imprimirRGB(const unsigned char* data, const string& mensaje);
+void xorRotarDer3(unsigned char* data, int size, unsigned char* IM);
+
+unsigned char* IM_GLOBAL = nullptr;
+
+void xorRotarDer3_bind(unsigned char* data, int size) {
+    xorRotarDer3(data, size, IM_GLOBAL);
+}
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
@@ -321,12 +328,52 @@ int main(int argc, char *argv[]) {
         cout << "La secuencia no coincide con M2.txt\n";
     }
 
+
     delete[] resultado2;
     delete[] copiaSecuencia;
     delete[] I_O;
     delete[] I_M;
     delete[] mascara;
 
+
+    cout << "\n=== PRUEBA CON probarTransformacion: XOR + ROTACION DERECHA ===" << endl;
+
+    // Re-cargar I_O, I_M, máscara y M2.txt (por si los liberaste antes)
+    int widthO = 0, heightO = 0;
+    unsigned char* IO = loadPixels("C:/Caso1/I_O.bmp", widthO, heightO);
+    if (!IO) { cout << "Error al cargar I_O.bmp\n"; return -1; }
+
+    int widthIM = 0, heightIM = 0;
+    unsigned char* IM = loadPixels("C:/Caso1/I_M.bmp", widthIM, heightIM);
+    if (!IM) { cout << "Error al cargar I_M.bmp\n"; return -1; }
+    IM_GLOBAL = IM;
+
+
+    int widthM = 0, heightM = 0;
+    unsigned char* mascara1 = loadPixels("C:/Caso1/M.bmp", widthM, heightM);
+    if (!mascara1) { cout << "Error al cargar M.bmp\n"; return -1; }
+
+    int seedM2 = 0, n_pixM2 = 0;
+    unsigned int* resultadoM2 = loadSeedMasking("C:/Caso1/M2.txt", seedM2, n_pixM2);
+    if (!resultadoM2) { cout << "Error al cargar M2.txt\n"; return -1; }
+
+    // Ejecutar la prueba
+    bool ok = probarTransformacion(IO, widthO, heightO,
+                                   mascara, resultadoM2, seedM2,
+                                   heightM, widthM,
+                                   xorRotarDer3_bind);
+
+    if (ok) {
+        cout << "Funcion probarTransformacion detecta correctamente XOR + ROT_RIGHT_3 como M2.txt\n";
+    } else {
+        cout << "No se detecto correctamente la transformacion.\n";
+    }
+
+    // Liberar memoria
+    delete[] IO;
+    delete[] IM;
+    delete[] mascara1;
+    delete[] resultadoM2;
 
 
     return 0;
@@ -350,4 +397,10 @@ void imprimirRGB(const unsigned char* data, const string& mensaje) {
         cout << endl;
     }
     cout << "-------------------------------------" << endl;
+}
+
+
+void xorRotarDer3(unsigned char* data, int size, unsigned char* IM) {
+    xorPixels(data, IM, size);
+    rotateRight(data, size, 3);
 }
