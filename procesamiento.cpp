@@ -55,6 +55,9 @@ unsigned int* loadSeedMasking(const char* nombreArchivo, int &seed, int &n_pixel
 
     archivo >> seed;
     int r, g, b;
+    //Cambio por mi
+    n_pixels = 0;  //IMPORTANTE: REINICIAR para no acumular valores si se llama varias veces
+
 
     while (archivo >> r >> g >> b) {
         n_pixels++;

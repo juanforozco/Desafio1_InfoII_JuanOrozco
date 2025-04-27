@@ -343,9 +343,11 @@ bool encontrarTransformacionesGenerico(
     // Vamos hacia atrás, desde Mx.txt hasta M1.txt
     for (int paso = pasos - 1; paso >= 0; --paso) {
         bool encontrado = false;
-
+        //cout << "\nPaso " << paso + 1 << ": intentando transformaciones sobre base: "
+          //   << (int)actual[0] << endl;
         // Recorrer todas las operaciones posibles
         for (int tipo = 0; tipo < 4 && !encontrado; ++tipo) {
+
             for (int b = 0; b <= 8 && !encontrado; ++b) {
 
                 // Hacer copia del arreglo actual
@@ -368,6 +370,8 @@ bool encontrarTransformacionesGenerico(
                 if (verificarEnmascaramiento(copia, mascara, resultados[paso],
                                              seeds[paso], alturas[paso], anchuras[paso], width, height)) {
                     cout << "Paso " << paso + 1 << ": " << nombres[tipo] << " " << b << " bits\n";
+                    //cout << "Primer byte de imagenActual luego del paso " << paso + 1 << ": "
+                      //   << (int)actual[0] << endl;
                     encontrado = true;
                     delete[] actual;
                     actual = copia;

@@ -445,6 +445,7 @@ int main(int argc, char *argv[]) {
     cout << "\n=== PRUEBA ALGORITMO DE INGENIERIA INVERSA ===" << endl;
 
     // Rutas base
+    //QString base = "C:/Caso1/";
     QString base = "C:/Caso2/";
 
     // 1. Cargar I_D.bmp (resultado final después de todas las transformaciones)
@@ -473,16 +474,27 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    // 4. Cargar M0.txt a M6.txt
+
+    // 4. Cargar M0.txt a M6.txt CASO 2
     int cantidadTransformaciones = 6;
     unsigned int* archivosTxt[7];
     int semillas[7];
     int altos[7], anchos[7];
+    int pixeles_leidos[7];
+
+/*
+    // 4. Cargar M0.txt a M2.txt CASO 1
+    int cantidadTransformaciones = 2;
+    unsigned int* archivosTxt[3];
+    int semillas[3];
+    int altos[3], anchos[3];
+    int pixeles_leidos[3];
+*/
 
     for (int i = 0; i <= cantidadTransformaciones; i++) {
         QString nombre = base + "M" + QString::number(i) + ".txt";
         semillas[i] = 0;
-        archivosTxt[i] = loadSeedMasking(nombre.toStdString().c_str(), semillas[i], altos[i]);
+        archivosTxt[i] = loadSeedMasking(nombre.toStdString().c_str(), semillas[i], pixeles_leidos[i]);
 
         if (!archivosTxt[i]) {
             cout << "Error al cargar " << nombre.toStdString() << endl;
@@ -497,7 +509,7 @@ int main(int argc, char *argv[]) {
         anchos[i] = width_masc;
     }
 
-    /*
+/*
     //Verificar y corregir el crasheo
     cout << "\nVerificando consistencia de los datos cargados...\n";
     for (int i = 0; i <= cantidadTransformaciones; i++) {
@@ -506,7 +518,7 @@ int main(int argc, char *argv[]) {
              << ", Ancho: " << anchos[i]
              << ", Primer valor: " << archivosTxt[i][0] << endl;
     }
-    */
+*/
 
     // 5. Llamar a encontrarTransformacionesGenerico
     encontrarTransformacionesGenerico(I_D, I_M, M,
