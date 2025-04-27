@@ -1,5 +1,6 @@
 #include "bit_operations.h"
 #include "masking_verification.h" // Necesario para llamar a verificarEnmascaramiento
+#include "procesamiento.h"
 #include <iostream>
 
 using namespace std;
@@ -142,12 +143,6 @@ bool probarTransformacion(unsigned char* original, int width, int height,
  */
 
 
-/*
- * Funcion para determinar la secuencia de transformaciones del caso 1.
- * Funcionamiento: Se aplica exactamente el orden de transformaciones del caso 1 de acuerdo a la guía.
- *                 Posteriormente se aplica 'verificarEnmascaramiento' para comparar con los archivos Mx.txt
- *                 de cada paso y confirmar así, la secuencia y la correspondencia al resultado.
- */
 bool encontrarTransformacionesCaso1(
     unsigned char* original, // I_O
     unsigned char* imagen_aleatoria, // I_M
@@ -313,6 +308,143 @@ OperacionBit desplazamientosIzquierda[9] = {
  * PARTE 2: ALGORITMO DE INGENIERÍA INVERSA PARA DETECTAR QUE TRANSFORMACIONES FUERON REALIZADAS Y EN QUE ORDEN.
  */
 
+
+/*
+ * NUEVA LÓGICA: Utilizar las imágenes de cada paso para identificar la transformacion, verificarla y encontrar la secuencia
+*/
+
+bool identificarTransformaciones(
+    const char* basePath,
+    int pasos,
+    unsigned char* imagenAleatoria,
+    unsigned char* mascara,
+    unsigned int** archivosTxt,
+    int* semillas,
+    int* altos,
+    int* anchos,
+    char** registroTransformaciones
+    ) {
+    // Variables auxiliares
+    int width = 0, height = 0;
+    unsigned char* imagenActual = nullptr;
+
+    for (int paso = 0; paso < pasos; ++paso) {
+        cout << "\n==========================================\n";
+        cout << "Procesando paso " << paso << "...\n";
+
+        char rutaImagen[256];
+
+        if (paso == 0) {
+            // Para el paso 0, cargar IO.bmp
+            sprintf(rutaImagen, "%sI_O.bmp", basePath);
+        } else {
+            // Para los demás pasos, cargar P1.bmp, P2.bmp, etc.
+            sprintf(rutaImagen, "%sP%d.bmp", basePath, paso);
+        }
+
+        imagenActual = loadPixels(rutaImagen, width, height);
+        if (!imagenActual) {
+            cout << "Error al cargar " << rutaImagen << endl;
+            return false;
+        }
+
+        int totalBytes = width * height * 3;
+        bool encontrada = false;
+
+        // ===================== Primero: probar XOR con IM =====================
+        if (!encontrada && imagenAleatoria != nullptr) {
+            unsigned char* copiaXOR = new unsigned char[totalBytes];
+            for (int i = 0; i < totalBytes; ++i) {
+                copiaXOR[i] = imagenActual[i];
+            }
+
+            xorPixels(copiaXOR, imagenAleatoria, totalBytes);
+
+            if (verificarEnmascaramiento(copiaXOR, mascara, archivosTxt[paso],
+                                         semillas[paso], altos[paso], anchos[paso], width, height)) {
+                cout << "Paso " << paso << ": XOR con IM\n";
+                registroTransformaciones[paso] = new char[20];
+                sprintf(registroTransformaciones[paso], "XOR con IM");
+                encontrada = true;
+            }
+
+            delete[] copiaXOR;
+        }
+
+        // ===================== Luego: probar rotaciones y desplazamientos =====================
+        for (int b = 0; b <= 8 && !encontrada; ++b) {
+            if (probarTransformacion(imagenActual, width, height, mascara,
+                                     archivosTxt[paso], semillas[paso],
+                                     altos[paso], anchos[paso],
+                                     rotacionesIzquierda[b])) {
+                cout << "Paso " << paso << ": Rotacion a la izquierda " << b << " bits\n";
+                registroTransformaciones[paso] = new char[30];
+                sprintf(registroTransformaciones[paso], "ROT_LEFT %d bits", b);
+                encontrada = true;
+            }
+        }
+
+        for (int b = 0; b <= 8 && !encontrada; ++b) {
+            if (probarTransformacion(imagenActual, width, height, mascara,
+                                     archivosTxt[paso], semillas[paso],
+                                     altos[paso], anchos[paso],
+                                     rotacionesDerecha[b])) {
+                cout << "Paso " << paso << ": Rotacion a la derecha " << b << " bits\n";
+                registroTransformaciones[paso] = new char[30];
+                sprintf(registroTransformaciones[paso], "ROT_RIGHT %d bits", b);
+                encontrada = true;
+            }
+        }
+
+        for (int b = 0; b <= 8 && !encontrada; ++b) {
+            if (probarTransformacion(imagenActual, width, height, mascara,
+                                     archivosTxt[paso], semillas[paso],
+                                     altos[paso], anchos[paso],
+                                     desplazamientosIzquierda[b])) {
+                cout << "Paso " << paso << ": Desplazamiento a la izquierda " << b << " bits\n";
+                registroTransformaciones[paso] = new char[30];
+                sprintf(registroTransformaciones[paso], "SHIFT_LEFT %d bits", b);
+                encontrada = true;
+            }
+        }
+
+        for (int b = 0; b <= 8 && !encontrada; ++b) {
+            if (probarTransformacion(imagenActual, width, height, mascara,
+                                     archivosTxt[paso], semillas[paso],
+                                     altos[paso], anchos[paso],
+                                     desplazamientosDerecha[b])) {
+                cout << "Paso " << paso << ": Desplazamiento a la derecha " << b << " bits\n";
+                registroTransformaciones[paso] = new char[30];
+                sprintf(registroTransformaciones[paso], "SHIFT_RIGHT %d bits", b);
+                encontrada = true;
+            }
+        }
+
+        if (!encontrada) {
+            cout << "Error: No se encontro transformación valida en el paso " << paso << endl;
+            delete[] imagenActual;
+            return false;
+        }
+
+        delete[] imagenActual;
+        imagenActual = nullptr;
+    }
+
+    cout << "\n==========================================\n";
+    cout << "*** Todas las transformaciones fueron identificadas exitosamente. ***\n";
+    cout << "==========================================\n";
+
+    return true;
+}
+
+
+/*
+ * LA FUNCION encontrarTransformacionesGenerico no fue lo suficientemente útil, debido a errores de lógica
+ * ya que se trataba de retroceder desde la imagen final y comenzar a reconstruirla, pero no se tenia en cuenta
+ * las imagenes intermedias y no esta dando buenos resultados.
+ */
+
+/*
 bool encontrarTransformacionesGenerico(
     unsigned char* imagenInicial,  // I_D
     unsigned char* imagenAleatoria, // I_M
@@ -357,14 +489,14 @@ bool encontrarTransformacionesGenerico(
                 // Aplicar la transformación inversa
                 transformaciones[tipo][b](copia, total);
 
-                /*
+
                 // Verificar y corregir el crasheo
                 string nombre1 = "ROT_RIGHT_" + to_string(paso);
                 string nombre2 = "SHIFT_LEFT_" + to_string(tipo);
                 string nombre3 = "ROT_LEFT_" + to_string(b);
 
                 cout << "Intentando: [" << nombre1 << " -> " << nombre2 << " -> " << nombre3 << "]" << endl;
-                */
+
 
                 // Verificar si coincide con el archivo Mx.txt
                 if (verificarEnmascaramiento(copia, mascara, resultados[paso],
@@ -395,4 +527,4 @@ bool encontrarTransformacionesGenerico(
     delete[] actual;
     return true;
 }
-
+*/

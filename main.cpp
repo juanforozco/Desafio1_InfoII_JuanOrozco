@@ -2,7 +2,6 @@
 #include <iostream>
 #include "procesamiento.h"
 #include "bit_operations.h"
-#include "masking_verification.h"
 
 /*
  * Ruta para commits:
@@ -11,7 +10,7 @@
 
 
 using namespace std;
-
+/*
 void printBits(unsigned char byte);
 void imprimirRGB(const unsigned char* data, const string& mensaje);
 void xorRotarDer3(unsigned char* data, int size, unsigned char* IM);
@@ -21,7 +20,7 @@ unsigned char* IM_GLOBAL = nullptr;
 void xorRotarDer3_bind(unsigned char* data, int size) {
     xorRotarDer3(data, size, IM_GLOBAL);
 }
-
+*/
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
@@ -442,6 +441,11 @@ int main(int argc, char *argv[]) {
     delete[] resultadoM2;
 */
 
+/*
+ * LA prueba a continuacion es sobre la funcion encontrarTransformacionesGenerico la cual, debido a errores de lógica
+ * ya que se trataba de retroceder desde la imagen final y comenzar a reconstruirla, no dio los mejores resultados
+ * por lo que se decide cambiar de logica e implementar una nueva funcion de ingenieria inversa.
+
     cout << "\n=== PRUEBA ALGORITMO DE INGENIERIA INVERSA ===" << endl;
 
     // Rutas base
@@ -482,14 +486,13 @@ int main(int argc, char *argv[]) {
     int altos[7], anchos[7];
     int pixeles_leidos[7];
 
-/*
     // 4. Cargar M0.txt a M2.txt CASO 1
     int cantidadTransformaciones = 2;
     unsigned int* archivosTxt[3];
     int semillas[3];
     int altos[3], anchos[3];
     int pixeles_leidos[3];
-*/
+
 
     for (int i = 0; i <= cantidadTransformaciones; i++) {
         QString nombre = base + "M" + QString::number(i) + ".txt";
@@ -509,7 +512,7 @@ int main(int argc, char *argv[]) {
         anchos[i] = width_masc;
     }
 
-/*
+
     //Verificar y corregir el crasheo
     cout << "\nVerificando consistencia de los datos cargados...\n";
     for (int i = 0; i <= cantidadTransformaciones; i++) {
@@ -518,7 +521,7 @@ int main(int argc, char *argv[]) {
              << ", Ancho: " << anchos[i]
              << ", Primer valor: " << archivosTxt[i][0] << endl;
     }
-*/
+
 
     // 5. Llamar a encontrarTransformacionesGenerico
     encontrarTransformacionesGenerico(I_D, I_M, M,
@@ -532,10 +535,116 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i <= cantidadTransformaciones; i++) {
         delete[] archivosTxt[i];
     }
+ */
+
+
+// ========================== NUEVA PRUEBA AJUSTADA PARA IO.bmp ==========================
+
+// Definir número máximo de pasos
+#define MAX_PASOS 10
+
+    // Arreglo para registrar las transformaciones detectadas
+    char* registroTransformaciones[MAX_PASOS];
+
+    // BasePath clásico
+    const char* basePath = "C:/Caso1/";  // Ajusta si es necesario
+
+    // Arreglos para manejar los archivos
+    unsigned int* archivosTxt[MAX_PASOS];
+    int semillas[MAX_PASOS];
+    int altos[MAX_PASOS];
+    int anchos[MAX_PASOS];
+    int pixelesLeidos[MAX_PASOS];
+
+    // Variables auxiliares
+    unsigned char* mascara = nullptr;
+    unsigned char* imagenAleatoria = nullptr;
+    int widthM = 0, heightM = 0;
+    int widthIM = 0, heightIM = 0;
+
+    // Paso 1: Cargar la máscara
+    char rutaMascara[256];
+    sprintf(rutaMascara, "%sM.bmp", basePath);
+    mascara = loadPixels(rutaMascara, widthM, heightM);
+    if (!mascara) {
+        cout << "Error al cargar M.bmp" << endl;
+        return -1;
+    }
+
+    // Paso 2: Cargar imagen aleatoria IM
+    char rutaIM[256];
+    sprintf(rutaIM, "%sI_M.bmp", basePath);
+    imagenAleatoria = loadPixels(rutaIM, widthIM, heightIM);
+    if (!imagenAleatoria) {
+        cout << "Error al cargar I_M.bmp" << endl;
+        delete[] mascara;
+        return -1;
+    }
+
+    // Paso 3: Cargar archivos Mx.txt
+    int pasos = 3;  // Ahora son 3 pasos: M0.txt, M1.txt, M2.txt
+
+    for (int i = 0; i < pasos; ++i) {
+        char nombreArchivo[256];
+        sprintf(nombreArchivo, "%sM%d.txt", basePath, i);
+
+        semillas[i] = 0;
+        archivosTxt[i] = loadSeedMasking(nombreArchivo, semillas[i], pixelesLeidos[i]);
+
+        if (!archivosTxt[i]) {
+            cout << "Error al cargar " << nombreArchivo << endl;
+            for (int j = 0; j < i; ++j) delete[] archivosTxt[j];
+            delete[] mascara;
+            delete[] imagenAleatoria;
+            return -1;
+        }
+
+        altos[i] = heightM;
+        anchos[i] = widthM;
+    }
+
+    // Paso 4: Llamar a identificarTransformaciones
+    bool exito = identificarTransformaciones(
+        basePath,
+        pasos,
+        imagenAleatoria,
+        mascara,
+        archivosTxt,
+        semillas,
+        altos,
+        anchos,
+        registroTransformaciones
+        );
+
+    // Paso 5: Mostrar resultados
+    if (!exito) {
+        cout << "No se pudo identificar correctamente todas las transformaciones." << endl;
+    } else {
+        cout << "\nTransformaciones detectadas en orden:\n";
+        for (int i = 0; i < pasos; ++i) {
+            cout << "Paso " << i << ": " << registroTransformaciones[i] << endl;
+        }
+    }
+
+    // Paso 6: Liberar memoria
+    for (int i = 0; i < pasos; ++i) {
+        delete[] registroTransformaciones[i];
+    }
+
+    delete[] mascara;
+    delete[] imagenAleatoria;
+
+    for (int i = 0; i < pasos; ++i) {
+        delete[] archivosTxt[i];
+    }
+
+    // ========================== FIN DE PRUEBA ==========================
+
 
     return 0;
 }
 
+/*
 //Funcion para imprimir los bits luego de la rotacion en las pruebas
 void printBits(unsigned char byte) {
     for (int i = 7; i >= 0; i--) {
@@ -561,3 +670,4 @@ void xorRotarDer3(unsigned char* data, int size, unsigned char* IM) {
     xorPixels(data, IM, size);
     rotateRight(data, size, 3);
 }
+*/

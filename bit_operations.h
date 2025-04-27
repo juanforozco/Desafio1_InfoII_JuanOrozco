@@ -103,6 +103,18 @@ bool encontrarTransformacionesGenerico(
     int width, int height           // Dimensiones de la imagen
     );
 
+
+bool identificarTransformaciones(
+    const char* basePath,     // Ruta base donde están los archivos (por ejemplo "C:/Caso1/")
+    int pasos,                // Número de pasos (por ejemplo 2 para Caso 1, 6 para Caso 2)
+    unsigned char* imagenAleatoria, // IM (imagen aleatoria para XOR, si aplica)
+    unsigned char* mascara,   // M.bmp (máscara para enmascaramiento)
+    unsigned int** archivosTxt, // Punteros a los datos de M0.txt, M1.txt, ..., Mn.txt
+    int* semillas,            // Arreglo de seeds (una por cada Mx.txt)
+    int* altos, int* anchos,    // Altos y anchos de las máscaras (normalmente constantes)
+     char** registroTransformaciones
+    );
+
 typedef void (*OperacionBit)(unsigned char*, int);
 
 #endif // BIT_OPERATIONS_H
