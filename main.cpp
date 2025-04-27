@@ -538,7 +538,8 @@ int main(int argc, char *argv[]) {
  */
 
 
-// ========================== NUEVA PRUEBA AJUSTADA PARA IO.bmp ==========================
+
+// ========================== NUEVA PRUEBA EN MAIN ==========================
 
 // Definir número máximo de pasos
 #define MAX_PASOS 10
@@ -547,7 +548,7 @@ int main(int argc, char *argv[]) {
     char* registroTransformaciones[MAX_PASOS];
 
     // BasePath clásico
-    const char* basePath = "C:/Caso1/";  // Ajusta si es necesario
+    const char* basePath = "C:/Caso2/";  // Ajusta si estás en Caso2
 
     // Arreglos para manejar los archivos
     unsigned int* archivosTxt[MAX_PASOS];
@@ -582,7 +583,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Paso 3: Cargar archivos Mx.txt
-    int pasos = 3;  // Ahora son 3 pasos: M0.txt, M1.txt, M2.txt
+    int pasos = 6; // Se ajusta según caso: 2 para Caso1, 6 para Caso2
 
     for (int i = 0; i < pasos; ++i) {
         char nombreArchivo[256];
@@ -639,7 +640,6 @@ int main(int argc, char *argv[]) {
     }
 
     // ========================== FIN DE PRUEBA ==========================
-
 
     return 0;
 }

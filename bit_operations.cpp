@@ -314,34 +314,29 @@ OperacionBit desplazamientosIzquierda[9] = {
 */
 
 bool identificarTransformaciones(
-    const char* basePath,
-    int pasos,
-    unsigned char* imagenAleatoria,
-    unsigned char* mascara,
-    unsigned int** archivosTxt,
-    int* semillas,
-    int* altos,
-    int* anchos,
-    char** registroTransformaciones
+    const char* basePath,            // Ruta base donde están las imágenes y archivos
+    int pasos,                       // Número de pasos (cantidad de transformaciones a identificar)
+    unsigned char* imagenAleatoria,  // Imagen IM para posibles operaciones XOR (no usada aún)
+    unsigned char* mascara,          // Imagen M.bmp (máscara de enmascaramiento)
+    unsigned int** archivosTxt,      // Arreglo de punteros a los archivos M0.txt, M1.txt, ...
+    int* semillas,                   // Arreglo de seeds de cada archivo Mx.txt
+    int* altos, int* anchos,          // Altura y ancho de la máscara por paso
+    char** registroTransformaciones  // Arreglo donde se registran las transformaciones detectadas
     ) {
     // Variables auxiliares
     int width = 0, height = 0;
     unsigned char* imagenActual = nullptr;
 
+    // Bucle para recorrer cada paso de transformación
     for (int paso = 0; paso < pasos; ++paso) {
         cout << "\n==========================================\n";
         cout << "Procesando paso " << paso << "...\n";
 
+        // Construir la ruta del archivo Px.bmp
         char rutaImagen[256];
+        sprintf(rutaImagen, "%sP%d.bmp", basePath, paso+1);
 
-        if (paso == 0) {
-            // Para el paso 0, cargar IO.bmp
-            sprintf(rutaImagen, "%sI_O.bmp", basePath);
-        } else {
-            // Para los demás pasos, cargar P1.bmp, P2.bmp, etc.
-            sprintf(rutaImagen, "%sP%d.bmp", basePath, paso);
-        }
-
+        // Cargar la imagen actual
         imagenActual = loadPixels(rutaImagen, width, height);
         if (!imagenActual) {
             cout << "Error al cargar " << rutaImagen << endl;
@@ -349,9 +344,11 @@ bool identificarTransformaciones(
         }
 
         int totalBytes = width * height * 3;
+
+        // Variables para registrar si encontramos la transformación correcta
         bool encontrada = false;
 
-        // ===================== Primero: probar XOR con IM =====================
+        // ===================== NUEVO: Probar primero XOR con IM =====================
         if (!encontrada && imagenAleatoria != nullptr) {
             unsigned char* copiaXOR = new unsigned char[totalBytes];
             for (int i = 0; i < totalBytes; ++i) {
@@ -371,7 +368,9 @@ bool identificarTransformaciones(
             delete[] copiaXOR;
         }
 
-        // ===================== Luego: probar rotaciones y desplazamientos =====================
+        // ===================== Luego probar rotaciones y desplazamientos =====================
+
+        // Probar rotaciones a la izquierda (0 a 8 bits)
         for (int b = 0; b <= 8 && !encontrada; ++b) {
             if (probarTransformacion(imagenActual, width, height, mascara,
                                      archivosTxt[paso], semillas[paso],
@@ -384,6 +383,7 @@ bool identificarTransformaciones(
             }
         }
 
+        // Probar rotaciones a la derecha (0 a 8 bits)
         for (int b = 0; b <= 8 && !encontrada; ++b) {
             if (probarTransformacion(imagenActual, width, height, mascara,
                                      archivosTxt[paso], semillas[paso],
@@ -396,6 +396,7 @@ bool identificarTransformaciones(
             }
         }
 
+        // Probar desplazamientos a la izquierda (0 a 8 bits)
         for (int b = 0; b <= 8 && !encontrada; ++b) {
             if (probarTransformacion(imagenActual, width, height, mascara,
                                      archivosTxt[paso], semillas[paso],
@@ -408,6 +409,7 @@ bool identificarTransformaciones(
             }
         }
 
+        // Probar desplazamientos a la derecha (0 a 8 bits)
         for (int b = 0; b <= 8 && !encontrada; ++b) {
             if (probarTransformacion(imagenActual, width, height, mascara,
                                      archivosTxt[paso], semillas[paso],
@@ -420,22 +422,26 @@ bool identificarTransformaciones(
             }
         }
 
+        // Si no encontramos ninguna transformación válida, reportar error
         if (!encontrada) {
-            cout << "Error: No se encontro transformación valida en el paso " << paso << endl;
+            cout << "Error: No se encontró transformación valida en el paso " << paso << endl;
             delete[] imagenActual;
             return false;
         }
 
+        // Liberar la imagen cargada de este paso antes de cargar la siguiente
         delete[] imagenActual;
         imagenActual = nullptr;
     }
 
+    // Si completamos correctamente todos los pasos
     cout << "\n==========================================\n";
     cout << "*** Todas las transformaciones fueron identificadas exitosamente. ***\n";
     cout << "==========================================\n";
 
     return true;
 }
+
 
 
 /*

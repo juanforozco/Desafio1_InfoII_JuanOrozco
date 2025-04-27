@@ -21,7 +21,6 @@ using namespace std;
  */
 bool verificarEnmascaramiento(unsigned char* imagen, unsigned char* mascara, unsigned int* resultado,
                               int seed, int m, int n, int width, int height) {
-
     if (!imagen || !mascara || !resultado) {
         cout << "Error: puntero nulo en los datos recibidos." << endl;
         return false;
@@ -38,13 +37,16 @@ bool verificarEnmascaramiento(unsigned char* imagen, unsigned char* mascara, uns
     for (int i = 0; i < totalMascara; i++) {
         int suma = static_cast<int>(imagen[seed + i]) + static_cast<int>(mascara[i]);
         if (suma != static_cast<int>(resultado[i])) {
-            cout << "Error en el pixel " << i / 3 << ", canal " << i % 3
+            // Solo un mensaje de error, sin decir "verificado exitosamente"
+            cout << "Error en pixel " << i/3 << ", canal " << i%3
                  << ". Esperado: " << resultado[i]
                  << ", Calculado: " << suma << endl;
             return false;
         }
     }
 
-    cout << "El enmascaramiento fue verificado exitosamente." << endl;
+    // Si pasa todo el ciclo for, ahí sí decimos que fue exitoso
+    cout << "Enmascaramiento verificado correctamente." << endl;
     return true;
 }
+
