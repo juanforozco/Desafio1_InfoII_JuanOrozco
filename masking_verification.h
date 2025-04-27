@@ -2,7 +2,7 @@
 #define MASKING_VERIFICATION_H
 
 bool verificarEnmascaramiento(unsigned char* imagen, unsigned char* mascara, unsigned int* resultado,
-                              int seed, int m, int n, int width, int height);
+                              int seed, int m, int n, int width, int height, bool imprimirErrores = true);
 
 
 #endif // MASKING_VERIFICATION_H

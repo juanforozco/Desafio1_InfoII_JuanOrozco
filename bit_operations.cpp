@@ -114,7 +114,7 @@ bool probarTransformacion(unsigned char* original, int width, int height,
     operacion(copia, total);
 
     // Verificar el resultado del enmascaramiento con la copia modificada
-    bool exito = verificarEnmascaramiento(copia, mascara, resultado, seed, m, n, width, height);
+    bool exito = verificarEnmascaramiento(copia, mascara, resultado, seed, m, n, width, height, false);
 
     // Liberar memoria usada por la copia
     delete[] copia;
@@ -358,7 +358,7 @@ bool identificarTransformaciones(
             xorPixels(copiaXOR, imagenAleatoria, totalBytes);
 
             if (verificarEnmascaramiento(copiaXOR, mascara, archivosTxt[paso],
-                                         semillas[paso], altos[paso], anchos[paso], width, height)) {
+                                         semillas[paso], altos[paso], anchos[paso], width, height, false)) {
                 cout << "Paso " << paso << ": XOR con IM\n";
                 registroTransformaciones[paso] = new char[20];
                 sprintf(registroTransformaciones[paso], "XOR con IM");
