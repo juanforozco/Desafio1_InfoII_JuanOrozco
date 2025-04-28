@@ -2,9 +2,7 @@
 #define BIT_OPERATIONS_H
 
 // XOR
-
 void xorPixels(unsigned char* image, unsigned char* mask, int size);
-
 
 //ROTACION: izquierda y derecha
 void rotateRight(unsigned char* data, int size, int bits);
@@ -18,13 +16,11 @@ void shiftLeft(unsigned char* data, int size, int bits);
 void desplazarIzquierda3(unsigned char* data, int size); //Adaptada para pruebas
 void desplazarDerecha3(unsigned char* data, int size); //Adapatada para pruebas
 
-
 //Probar diferentes transformaciones y verificarlas con los arvichivos Mx.txt
 bool probarTransformacion(unsigned char* original, int width, int height,
                           unsigned char* mascara, unsigned int* resultado,
                           int seed, int m, int n,
                           void (*operacion)(unsigned char*, int));
-
 
 //Funcion para determinar la secuencia de transformaciones del caso 1.
 bool encontrarTransformacionesCaso1(
@@ -43,6 +39,8 @@ bool encontrarTransformacionesCaso1(
 /*
  * PARTE 1: Funciones de transformaciones para cada cantidad de bits posibles.
  */
+
+typedef void (*OperacionBit)(unsigned char*, int);
 
 // ROTACIONES A LA DERECHA
 void rotarDer0(unsigned char* d, int s);
@@ -91,8 +89,6 @@ void desplazarIzq8(unsigned char* d, int s);
 /*
  * PARTE 2: ALGORITMO DE INGENIERÍA INVERSA PARA DETECTAR QUE TRANSFORMACIONES FUERON REALIZADAS Y EN QUE ORDEN.
  */
-
-
 int identificarTransformaciones(
     const char* basePath,
     int pasos,
@@ -115,7 +111,5 @@ bool reconstruirImagen(
     );
 
 bool compararImagenes(const char* ruta1, const char* ruta2);
-
-typedef void (*OperacionBit)(unsigned char*, int);
 
 #endif // BIT_OPERATIONS_H

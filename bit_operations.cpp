@@ -429,7 +429,7 @@ int identificarTransformaciones( //Retorna el numero de transformaciones detecta
         }
 
         if (!encontrada) {
-            cout << "Error: No se encontró transformación valida en el paso " << paso << endl;
+            cout << "Error: No se encontro transformacion valida en el paso " << paso << endl;
             delete[] imagenActual;
             return -1;
         }
@@ -508,14 +508,9 @@ bool reconstruirImagen( //Si se pudo reconstruir la imagen retorna true, si hubo
         return false;
     }
 
-    // Desnmascarar la iamgen
-    cout << "\nAplicando desenmascaramiento..." << endl;
-    for (int i = 0; i < totalBytesMascara; ++i) {
-        imagen[seed + i] = static_cast<unsigned char>((static_cast<int>(imagen[seed + i]) - static_cast<int>(mascara[i]) + 256) % 256);
-    }
-
     //Aplicar transformaciones inversas, de la ultima a la primera
     for (int i = pasos - 1; i >= 0; --i) {
+
         if (registroTransformaciones[i] == nullptr) continue; //Si no hay transformacion, continua
 
         cout << "\nAplicando inversa de: " << registroTransformaciones[i] << endl;

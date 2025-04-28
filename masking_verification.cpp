@@ -30,7 +30,7 @@ bool verificarEnmascaramiento(unsigned char* imagen, unsigned char* mascara, uns
 
     int totalMascara = m * n * 3;
     int totalImagen = width * height * 3;
-
+    //Verificar que el rango no sobre pase el tamaño de la imagen
     if (seed + totalMascara > totalImagen) {
         if (imprimirErrores) {
             cout << "Error: El rango excede el tamaño de la imagen." << endl;
@@ -38,11 +38,13 @@ bool verificarEnmascaramiento(unsigned char* imagen, unsigned char* mascara, uns
         return false;
     }
 
+    //Verificacion de enmascarameinto con formula. Se debe castear a int por que los bytes vienen como tipo char
+    //y podria generar inconvenientes de rangos
     for (int i = 0; i < totalMascara; i++) {
         int suma = static_cast<int>(imagen[seed + i]) + static_cast<int>(mascara[i]);
-        if (suma != static_cast<int>(resultado[i])) {
+        if (suma != static_cast<int>(resultado[i])) {//Se compara la suma con el valor del Mx.txt
             if (imprimirErrores) {
-                cout << "Error en pixel " << i/3 << ", canal " << i%3
+                cout << "Error en pixel " << i/3 << ", canal " << i%3 //i/3 pixel, i%3 canal R, G o B.
                      << ". Esperado: " << resultado[i]
                      << ", Calculado: " << suma << endl;
             }
