@@ -92,28 +92,29 @@ void desplazarIzq8(unsigned char* d, int s);
  * PARTE 2: ALGORITMO DE INGENIERÍA INVERSA PARA DETECTAR QUE TRANSFORMACIONES FUERON REALIZADAS Y EN QUE ORDEN.
  */
 
-bool encontrarTransformacionesGenerico(
-    unsigned char* imagenInicial,  // I_D
-    unsigned char* imagenAleatoria, // I_M
-    unsigned char* mascara,         // M
-    unsigned int** resultados,      // Arreglo de punteros a archivos Mx.txt
-    int* seeds,                     // Arreglo de semillas de cada archivo Mx.txt
-    int* alturas, int* anchuras,    // Altura y ancho de la máscara en cada paso
-    int pasos,                      // Número de transformaciones (cantidad de archivos Mx.txt)
-    int width, int height           // Dimensiones de la imagen
+
+int identificarTransformaciones(
+    const char* basePath,
+    int pasos,
+    unsigned char* imagenAleatoria,
+    unsigned char* mascara,
+    unsigned int** archivosTxt,
+    int* semillas,
+    int* altos, int* anchos,
+    char** registroTransformaciones
     );
 
-
-bool identificarTransformaciones(
-    const char* basePath,     // Ruta base donde están los archivos (por ejemplo "C:/Caso1/")
-    int pasos,                // Número de pasos (por ejemplo 2 para Caso 1, 6 para Caso 2)
-    unsigned char* imagenAleatoria, // IM (imagen aleatoria para XOR, si aplica)
-    unsigned char* mascara,   // M.bmp (máscara para enmascaramiento)
-    unsigned int** archivosTxt, // Punteros a los datos de M0.txt, M1.txt, ..., Mn.txt
-    int* semillas,            // Arreglo de seeds (una por cada Mx.txt)
-    int* altos, int* anchos,    // Altos y anchos de las máscaras (normalmente constantes)
-     char** registroTransformaciones
+bool reconstruirImagen(
+    const char* rutaImagenFinal,
+    const char* rutaImagenAleatoria,
+    const char* rutaMascara,
+    int seed,
+    const char* rutaReconstruida,
+    char** registroTransformaciones,
+    int pasos
     );
+
+bool compararImagenes(const char* ruta1, const char* ruta2);
 
 typedef void (*OperacionBit)(unsigned char*, int);
 
