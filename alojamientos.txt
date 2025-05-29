@@ -1,0 +1,15 @@
+A1|Casa Campestre La Vega|1|Cra 45 #21-30|La Ceja|Antioquia|180000|123456789|piscina,parqueadero,patio
+A2|Apartamento Central|0|Cl 10 #50-20|Medellin|Antioquia|120000|123456789|ascensor,aire acondicionado,wifi
+A3|Casa Familiar Jardin|1|Cl 4 #3-25|Jardin|Antioquia|150000|987654321|patio,parqueadero,chimenea
+A4|Apartamento Estudio|0|Cra 65 #45-10|Medellin|Antioquia|110000|987654321|ascensor,caja fuerte
+A5|Casa del Bosque|1|Km 5 via El Retiro|El Retiro|Antioquia|200000|123456789|piscina,jacuzzi,chimenea
+A6|Apartamento Vista Azul|0|Cl 50 #10-12|Envigado|Antioquia|130000|555555555|ascensor,wifi
+A7|Cabaña en el Lago|1|Km 8 via Guatape|Guatape|Antioquia|250000|111111111|parqueadero,chimenea,patio
+A8|Loft Moderno|0|Cl 60 #35-10|Sabaneta|Antioquia|140000|222222222|wifi,aire acondicionado,ascensor
+A9|Casa Colonial|1|Cl 9 #6-20|Santa Fe|Antioquia|170000|333333333|patio,chimenea,parqueadero
+A10|Estudio Minimalista|0|Cl 44 #33-18|Medellin|Antioquia|115000|444444444|caja fuerte,wifi
+A11|Casa en el Bosque|1|Vereda La Clara|San Pedro|Antioquia|190000|666666666|chimenea,parqueadero
+A12|Penthouse El Poblado|0|Cl 12 #43B-10|Medellin|Antioquia|300000|777777777|jacuzzi,ascensor,aire acondicionado
+A13|Cabaña Mirador|1|Km 10 via Rionegro|Rionegro|Antioquia|220000|888888888|vista,chimenea,patio
+A14|Apto Familiar Sur|0|Cra 52 #20-10|Itagüí|Antioquia|125000|222222222|parqueadero,wifi
+A15|Casa Jardín Encantado|1|Cl 6 #8-22|Santa Elena|Antioquia|160000|987654321|jardín,patio,parqueadero
